@@ -87,15 +87,33 @@
     @endif
 </div>
 
+{{-- Hidden inputs with what user submitted --}}
+    <input type="hidden" id="lat" value="{{ old('lat', $data['lat'] ?? '') }}">
+    <input type="hidden" id="lng" value="{{ old('lng', $data['lng'] ?? '') }}">
+
+    <button id="btnUserLocation">Show User Location</button>
+
 {{-- Map Script --}}
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        initMap(14.5995, 120.9842);
+   document.addEventListener("DOMContentLoaded", function () {
+    const mapInstance = window.initMap();
 
-        @if(isset($lat) && isset($lng))
-            updateDeliveryMarker({{ $lat }}, {{ $lng }}, true);
-        @endif
+    @if(isset($data['lat']) && isset($data['lng']))
+        window.showUserInputMarker({{ $data['lat'] }}, {{ $data['lng'] }});
+    @endif
+
+    document.getElementById("btnUserLocation")?.addEventListener("click", () => {
+        const lat = parseFloat(document.getElementById("lat").value.trim());
+        const lng = parseFloat(document.getElementById("lng").value.trim());
+
+        if (!isNaN(lat) && !isNaN(lng)) {
+            window.showUserInputMarker(lat, lng);
+            mapInstance.setView([lat, lng], 15);
+        }
+
+        
     });
+});
 </script>
 
 @endsection

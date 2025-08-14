@@ -1,16 +1,13 @@
 @extends('layouts.app')
 
-{{-- full-bleed to let background cover edge-to-edge --}}
 @section('main-class','p-0')
 
 @section('content')
-{{-- Background --}}
 <div class="min-h-[calc(100vh-64px)] w-full bg-smart-blue relative">
 
-  {{-- Split screen container --}}
   <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-10 gap-8">
 
-    {{-- MAP column (70%) --}}
+    {{-- MAP column --}}
     <section class="lg:col-span-7 card-solid p-4 relative reveal">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-lg font-semibold">Interactive Map</h2>
@@ -23,13 +20,12 @@
       </div>
       <div id="map" class="w-full min-h-[400px] h-[65vh] block rounded-2xl overflow-hidden"></div>
 
-      {{-- radius legend --}}
       <div class="absolute bottom-4 left-4 chip">Radius:
         <span id="radiusLabel" class="ml-1 text-accent font-semibold">250 m</span>
       </div>
     </section>
 
-    {{-- FLOATING FORM column (30%) --}}
+    {{-- FORM column --}}
     <aside class="lg:col-span-3 space-y-6">
       <div class="card-glass p-6 reveal">
         <div class="flex items-center gap-3 mb-4">
@@ -66,12 +62,12 @@
             <input type="hidden" name="radius" id="radiusHidden" value="{{ old('radius',250) }}">
           </div>
 
-          {{-- Instant accuracy estimate (demo calc in JS) --}}
           <div class="text-sm text-white/80">
             Estimated accuracy: <span id="estAcc" class="font-semibold text-accent">99.2%</span>
           </div>
 
-          <button type="submit" class="btn-gradient w-full">Analyze Proximity</button>
+          {{-- Added id here --}}
+          <button id="analyzeBtn" type="submit" class="btn-gradient w-full">Analyze Proximity</button>
         </form>
 
         @if($errors->any())
@@ -83,24 +79,21 @@
         @endif
       </div>
 
-        {{-- Metrics bar --}}
-        <div class="card-glass p-5 grid grid-cols-3 gap-4 reveal">
-            <div>
-            <div class="text-2xl font-bold">99.9%</div>
-            <div class="text-xs text-white/70">Accuracy</div>
-            </div>
-            <div>
-            <div class="text-2xl font-bold">&lt;50ms</div>
-            <div class="text-xs text-white/70">Response</div>
-            </div>
-            <div>
-            <div class="text-2xl font-bold">24/7</div>
-            <div class="text-xs text-white/70">Availability</div>
-            </div>
+      <div class="card-glass p-5 grid grid-cols-3 gap-4 reveal">
+        <div>
+          <div class="text-2xl font-bold">99.9%</div>
+          <div class="text-xs text-white/70">Accuracy</div>
         </div>
+        <div>
+          <div class="text-2xl font-bold">&lt;50ms</div>
+          <div class="text-xs text-white/70">Response</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold">24/7</div>
+          <div class="text-xs text-white/70">Availability</div>
+        </div>
+      </div>
 
-
-      {{-- Status chips --}}
       <div class="flex flex-wrap gap-2 reveal">
         <span class="chip">🚚 Deliveries: <span id="deliveriesCount" class="text-accent ml-1">12</span></span>
         <span class="chip">🛎 Alerts today: <span id="alertsCount" class="text-accent ml-1">3</span></span>
@@ -109,19 +102,29 @@
     </aside>
   </div>
 </div>
-</div>
 
-{{-- Include map JS --}}
 @vite('resources/js/map.js')
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    window.Echo.channel('location-tracking')
-        .listen('LocationUpdated', (e) => {
-            console.log("New location received:", e);
-        });
-
     initMap();
+
+    const form = document.getElementById("proxForm");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+
+    form.addEventListener("submit", function () {
+        // Disable and show spinner
+        analyzeBtn.disabled = true;
+        analyzeBtn.innerHTML = `
+            <span class="flex items-center justify-center">
+                <svg class="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                </svg>
+                Processing...
+            </span>
+        `;
+    });
 });
 </script>
 @endsection
