@@ -80,19 +80,20 @@
       </div>
 
       <div class="card-glass p-5 grid grid-cols-3 gap-4 reveal">
-        <div>
-          <div class="text-2xl font-bold">99.9%</div>
-          <div class="text-xs text-white/70">Accuracy</div>
-        </div>
-        <div>
-          <div class="text-2xl font-bold">&lt;50ms</div>
-          <div class="text-xs text-white/70">Response</div>
-        </div>
-        <div>
-          <div class="text-2xl font-bold">24/7</div>
-          <div class="text-xs text-white/70">Availability</div>
-        </div>
+      <div>
+        <div class="text-2xl font-bold">150+</div>
+        <div class="text-xs text-white/70">Successful Deliveries</div>
       </div>
+      <div>
+        <div class="text-2xl font-bold">3–5 min</div>
+        <div class="text-xs text-white/70">Average Arrival Time</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold">100%</div>
+        <div class="text-xs text-white/70">Customer Satisfaction</div>
+      </div>
+    </div>
+
 
       <div class="flex flex-wrap gap-2 reveal">
         <span class="chip">🚚 Deliveries: <span id="deliveriesCount" class="text-accent ml-1">12</span></span>
